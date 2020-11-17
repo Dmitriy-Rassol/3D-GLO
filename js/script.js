@@ -57,7 +57,6 @@ window.addEventListener('DOMContentLoaded', () => {
         btnMenu.addEventListener('click', handlerMenu);
         closeBtn.addEventListener('click', handlerMenu);
         menuItems.forEach(item => item.addEventListener('click', handlerMenu));
-
     };
 
     toggleMenu();
@@ -83,7 +82,6 @@ window.addEventListener('DOMContentLoaded', () => {
             popupContent.style.marginTop = count + 'px';
         };
 
-
         popupBtn.forEach(item => {
             item.addEventListener('click', () => {
                 popup.style.display = 'block';
@@ -96,11 +94,38 @@ window.addEventListener('DOMContentLoaded', () => {
 
         popupClose.addEventListener('click', () => {
             popup.style.display = 'none';
-            count = 150;
+            count = 100;
         });
+    };
+
+    togglePopup();
+
+    const toggleScroll = () => {
+        const menuLinks = document.querySelectorAll('menu a'),
+            mainBtnDown = document.querySelector('main a');
+
+        const getScroll = item => {
+            item.addEventListener('click', e => {
+                e.preventDefault();
+                const blockID = item.getAttribute('href');
+                document.querySelector(blockID).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        };
+
+        menuLinks.forEach(link => {
+            getScroll(link);
+        });
+
+        getScroll(mainBtnDown);
+
+
+
 
 
     };
 
-    togglePopup();
+    toggleScroll();
 });
