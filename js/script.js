@@ -283,6 +283,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     slider();
 
+    //меняем фото при наведении
+
     const changePhoto = () => {
         const commandPhoto = document.querySelectorAll('.command__photo');
 
@@ -316,6 +318,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // калькулятор
     checkInputCalc();
 
     const calc = (price = 100) => {
@@ -362,4 +365,77 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     calc(100);
+
+    //отправка формы
+
+    const sendForm = selectedForm => {
+        const errorMessage = 'Что-то пошло не так...',
+            loadMessage = 'Загрузка...',
+            successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+
+        const form = document.getElementById(selectedForm);
+
+        const statusMessage = document.createElement('div');
+        statusMessage.style.cssText = 'font-size: 2rem; color: #ffffff';
+
+        const phoneInput = form.querySelector('[type="tel"]');
+        phoneInput.addEventListener('input', () => {
+            phoneInput.value = phoneInput.value.replace(/(?<!^)\+|[^\d+]/g, '');
+        });
+
+        const textInput = form.querySelector('[type="text"]');
+        textInput.addEventListener('input', () => {
+            textInput.value = textInput.value.replace(/[^А-Яа-я\s]/g, '');
+        });
+    
+        const messageInput = document.querySelector('#form2-message');
+        messageInput.addEventListener('input', () => {
+            messageInput.value = messageInput.value.replace(/[^А-Яа-я\s]/g, '');
+        });
+
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            form.appendChild(statusMessage);
+            statusMessage.textContent = loadMessage;
+            const formData = new FormData(form);
+            const body = {};
+            formData.forEach((value, key) => {
+                body[key] = value;
+            });
+            // for (let val of formData.entries()) {
+            //     body[val[0]] = val[1];
+            // }
+            postData(body,
+                () => {
+                    statusMessage.textContent = successMessage;
+                    form.reset();
+                },
+                error => {
+                    statusMessage.textContent = errorMessage;
+                    console.error(error);
+                });
+        });
+
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+                if (request.status === 200) {
+                    outputData();
+                } else {
+                    errorData(request.status);
+                }
+            });
+
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.send(JSON.stringify(body));
+        };
+    };
+
+    sendForm('form1');
+    sendForm('form2');
+    sendForm('form3');
 });
