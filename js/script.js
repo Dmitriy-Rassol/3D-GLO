@@ -396,7 +396,9 @@ window.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', event => {
             event.preventDefault();
             form.appendChild(statusMessage);
-            statusMessage.textContent = loadMessage;
+            const loading = document.querySelector('.talign-center');
+            const lodaingClone = loading.cloneNode(true);
+            form.append(lodaingClone);
             const formData = new FormData(form);
             const body = {};
             formData.forEach((value, key) => {
@@ -407,10 +409,12 @@ window.addEventListener('DOMContentLoaded', () => {
             // }
             postData(body,
                 () => {
+                    form.removeChild(lodaingClone);
                     statusMessage.textContent = successMessage;
                     form.reset();
                 },
                 error => {
+                    form.removeChild(lodaingClone);
                     statusMessage.textContent = errorMessage;
                     console.error(error);
                 });
