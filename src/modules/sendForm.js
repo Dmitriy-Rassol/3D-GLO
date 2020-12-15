@@ -1,7 +1,8 @@
 const sendForm = selectedForm => {
+    const loading = document.querySelector('#spinner').content.querySelector('.talign-center');
+    const lodaingClone = loading.cloneNode(true);
     const message = {
         error: 'Что-то пошло не так...',
-        load: 'Загрузка...',
         success: 'Спасибо! Мы скоро с вами свяжемся!'
     };
 
@@ -29,9 +30,7 @@ const sendForm = selectedForm => {
     form.addEventListener('submit', event => {
         event.preventDefault();
         form.appendChild(statusMessage);
-
-        statusMessage.textContent = message.load;
-
+        form.append(lodaingClone);
         const formData = new FormData(form);
         // let body = {};
 
@@ -49,10 +48,12 @@ const sendForm = selectedForm => {
                 if (response.status !== 200) {
                     throw new Error('status network is not 200');
                 }
+                form.removeChild(lodaingClone);
                 statusMessage.textContent = message.success;
                 form.reset();
             })
             .catch(error => {
+                form.removeChild(lodaingClone);
                 statusMessage.textContent = message.error;
                 console.error(error);
             });
