@@ -29,6 +29,7 @@ const sendForm = selectedForm => {
 
     form.addEventListener('submit', event => {
         event.preventDefault();
+        statusMessage.textContent = '';
         form.appendChild(statusMessage);
         form.append(lodaingClone);
         const formData = new FormData(form);
