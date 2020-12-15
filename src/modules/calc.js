@@ -13,7 +13,7 @@ const calc = (price = 100) => {
         const input = target.closest('input');
 
         if (input) {
-            input.value = input.value.replace(/\D/, '');
+            input.value = input.value.replace(/[^\d+]/g, '');
         }
     });
 
